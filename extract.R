@@ -1,6 +1,7 @@
 # Packages
 library(tidyverse)
 library(microdatasus)
+library(janitor)
 
 ### MICRODATASUS ###
 # Fetch and read microdata files from DataSUS
@@ -24,3 +25,5 @@ dengue <- data_sus |>
   dplyr::filter(id_municip == 354980) |>
   janitor::clean_names()
 
+# Save Data
+readr::write_csv2(dengue, "dengue_sjrp_2025.csv")
