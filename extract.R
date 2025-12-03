@@ -9,21 +9,18 @@ library(janitor)
 # Source: https://github.com/rfsaldanha/microdatasus
 
 # Data Raw
-data_sus <- 
-  microdatasus::fetch_datasus(
+data_sus <- microdatasus::fetch_datasus(
     year_start = 2025,
     year_end = 2025,
     uf = "SP",
     timeout = 600, # timeout in seconds
     information_system = "SINAN-DENGUE"
   ) |>
-  microdatasus::process_sinan_dengue()|> 
-  janitor::clean_names()
+  microdatasus::process_sinan_dengue()
 
 # Filter (City of São José do Rio Preto)
 dengue <- data_sus |>
-  dplyr::filter(id_municip == 354980) |>
-  janitor::clean_names()
+  dplyr::filter(ID_MUNICIP == 354980)
 
 # Save Data
 readr::write_csv2(dengue, "dengue_sjrp_2025.csv")
