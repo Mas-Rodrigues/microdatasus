@@ -59,8 +59,8 @@ O script `extract.R` realiza as seguintes operações:
 
 1. **Download de Dados**: Baixa microdados do SINAN-DENGUE para o ano de 2025, estado de São Paulo
 2. **Processamento**: Processa os dados específicos de dengue com tratamento adequado das variáveis
-3. **Limpeza**: Padroniza os nomes das colunas usando `janitor::clean_names()`
-4. **Filtro**: Filtra os dados para um município específico (ID: 354980)
+3. **Filtro**: Filtra os dados para o município de São José do Rio Preto (ID: 354980)
+4. **Exportação**: Salva os dados filtrados em arquivo CSV (`dengue_sjrp_2025.csv`)
 
 ### Parâmetros Configuráveis
 
@@ -69,7 +69,8 @@ No arquivo `extract.R`, você pode ajustar:
 - `year_start` e `year_end`: Período de análise
 - `uf`: Unidade Federativa (estado)
 - `timeout`: Tempo limite para download (em segundos)
-- `id_municip`: Código do município para filtro
+- `ID_MUNICIP`: Código do município para filtro (padrão: 354980 - São José do Rio Preto)
+- Nome do arquivo de saída CSV
 
 ## 📚 Fontes de Dados
 

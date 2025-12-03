@@ -1,7 +1,6 @@
 # Packages
 library(tidyverse)
 library(microdatasus)
-library(janitor)
 
 ### MICRODATASUS ###
 # Fetch and read microdata files from DataSUS
