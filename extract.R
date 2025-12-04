@@ -8,22 +8,44 @@ library(janitor)
 # Description: fetch_datasus downloads microdata (DBC) files from DataSUS and reads them.
 # Source: https://github.com/rfsaldanha/microdatasus
 
-# Data Raw
-data_sus <- 
-  microdatasus::fetch_datasus(
-    year_start = 2025,
-    year_end = 2025,
-    uf = "SP",
-    timeout = 600, # timeout in seconds
-    information_system = "SINAN-DENGUE"
-  ) |>
-  microdatasus::process_sinan_dengue()|> 
-  janitor::clean_names()
 
-# Filter (City of São José do Rio Preto)
-dengue <- data_sus |>
-  dplyr::filter(id_municip == 354980) |>
-  janitor::clean_names()
+# Definir o intervalo de anos e o município
+anos <- 2010:2025 #Intervalo dos anos
+municipio_sjrp <- 354980 # Codigo municipal do IBGE
 
-# Save Data
-readr::write_csv2(dengue, "dengue_sjrp_2025.csv")
+for (ano in anos) {
+
+  message(paste("Processando e baixando o ano:", ano))
+
+  tryCatch({
+
+    data_sus_raw <- microdatasus::fetch_datasus(
+      year_start = ano,
+      year_end = ano,
+      uf = "SP",
+      timeout = 600,
+      information_system = "SINAN-DENGUE"
+    )
+
+    #Processamento e limpeza dos dados
+    data_sus_processed <- data_sus_raw |>
+      microdatasus::process_sinan_dengue() |>
+      janitor::clean_names()
+
+    # Filtrar (Município de Residência)
+    dengue_filtrado <- data_sus_processed |>
+      dplyr::filter(id_municip == municipio_sjrp)
+
+    # Salvar o arquivo com o nome do ano
+    nome_arquivo <- paste0("dengue_", ano, ".csv")
+    readr::write_csv2(dengue_filtrado, nome_arquivo)
+
+    message(paste("Arquivo", nome_arquivo, "salvo."))
+
+  }, error = function(e) {
+    # Captura e exibe o erro, mas permite que o loop continue para o próximo ano
+    warning(paste("Falha ao processar o ano", ano, ":", conditionMessage(e)))
+  })
+}
+
+message("Processamento finalizado.")
